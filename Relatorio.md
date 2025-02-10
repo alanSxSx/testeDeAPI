@@ -2,7 +2,7 @@ Relatório de Testes da API
 
 Introdução
 
-Este documento apresenta os resultados dos testes realizados na API utilizando Jest + Supertest para testes unitários e de integração, e K6 para testes de carga e desempenho.
+- Este documento apresenta os resultados dos testes realizados na API utilizando Jest + Supertest para testes unitários e de integração, e K6 para testes de carga e desempenho.
 
 Testes com Jest + Supertest
 
@@ -10,11 +10,9 @@ Testes com Jest + Supertest
 
 Endpoint: GET /users
 
-Resultado Esperado: Deve retornar um array de usuários cadastrados.
+- Resultado Esperado: Deve retornar um array de usuários cadastrados.
 
-Resultado Obtido:
-
-Status: 200 OK
+- Resultado Obtido: Status: 200 OK
 
 Retorno: Array de usuários contendo id, name e email.
 
@@ -32,11 +30,9 @@ Dados Enviados:
   "phone": "123456789"
 }
 
-Resultado Esperado: Usuário criado com status 201 Created.
+- Resultado Esperado: Usuário criado com status 201 Created.
 
-Resultado Obtido:
-
-Status: 201 Created
+- Resultado Obtido: Status: 201 Created
 
 Retorno: JSON contendo id, name, email.
 
@@ -52,11 +48,9 @@ Dados Enviados:
   "email": "teste@email.com"
 }
 
-Resultado Esperado: Retornar erro 400 Bad Request.
+- Resultado Esperado: Retornar erro 400 Bad Request.
 
-Resultado Obtido:
-
-Status: 400 Bad Request
+- Resultado Obtido: Status: 400 Bad Request
 
 Status: ✅ Passou
 
@@ -64,11 +58,9 @@ Status: ✅ Passou
 
 Endpoint: GET /error
 
-Resultado Esperado: Retornar erro 500 Internal Server Error.
+- Resultado Esperado: Retornar erro 500 Internal Server Error.
 
-Resultado Obtido:
-
-Status: 500 Internal Server Error
+- Resultado Obtido: Status: 500 Internal Server Error
 
 Status: ✅ Passou
 
@@ -100,7 +92,7 @@ Execução do Reset da API
 
 Endpoint: POST /reset
 
-Resultado: API resetada com sucesso após os testes.
+- Resultado: API resetada com sucesso após os testes.
 
 Status: ✅ Passou
 
