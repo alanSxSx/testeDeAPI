@@ -1,4 +1,4 @@
-Relatório de Testes da API
+# Relatório de Testes da API
 
 Introdução
 
@@ -6,7 +6,7 @@ Introdução
 
 Testes com Jest + Supertest
 
-1. Teste: Retornar a lista de usuários
+- Teste: Retornar a lista de usuários
 
 Endpoint: GET /users
 
@@ -18,7 +18,7 @@ Retorno: Array de usuários contendo id, name e email.
 
 Status: ✅ Passou
 
-2. Teste: Criar um novo usuário
+- Teste: Criar um novo usuário
 
 Endpoint: POST /users
 
@@ -26,7 +26,7 @@ Dados Enviados:
 
 {
   "name": "Teste Usuário",
-  "email": "teste@email.com",
+  "email": "<teste@email.com>",
   "phone": "123456789"
 }
 
@@ -38,14 +38,14 @@ Retorno: JSON contendo id, name, email.
 
 Status: ✅ Passou
 
-3. Teste: Criar um usuário sem nome (Erro 400)
+- Teste: Criar um usuário sem nome (Erro 400)
 
 Endpoint: POST /users
 
 Dados Enviados:
 
 {
-  "email": "teste@email.com"
+  "email": "<teste@email.com>"
 }
 
 - Resultado Esperado: Retornar erro 400 Bad Request.
@@ -54,7 +54,7 @@ Dados Enviados:
 
 Status: ✅ Passou
 
-4. Teste: Simular erro 500 no servidor
+- Teste: Simular erro 500 no servidor
 
 Endpoint: GET /error
 
