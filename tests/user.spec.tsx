@@ -20,8 +20,8 @@ describe('Testes da API de Usuários', () => {
       .post('/users')
       .send({
         name: 'Teste Usuário',
-        email: 'teste@email.com',
-        phone: '123456789'
+				username: 'teste',
+        email: 'teste@email.com'
       });
 
     expect(response.status).toBe(201);

@@ -1,0 +1,702 @@
+{
+	"info": {
+		"_postman_id": "5f4e2ed6-3736-4eab-82ce-7d96864e0f6e",
+		"name": "Mock API - Testes Independentes",
+		"description": "Testes com pre-request e pós-request script para independência total",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20510202"
+	},
+	"item": [
+		{
+			"name": "Listar Usuários",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Listar Posts",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/posts",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Resetar API",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/reset",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"reset"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Simular Erro 500",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Erro 500 simulado com sucesso\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([500]);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/error",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"error"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Criar Usuário",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+							"});",
+							"",
+							"let user = pm.response.json();",
+							"pm.collectionVariables.set(\"userId\", user.id);",
+							"",
+							"const userId = pm.collectionVariables.get(\"userId\");",
+							"if (userId) {",
+							"    pm.sendRequest({",
+							"        url: `http://localhost:3000/users/${userId}`,",
+							"        method: 'DELETE'",
+							"    }, function (err, res) {",
+							"        pm.collectionVariables.unset(\"userId\");",
+							"        console.log(\"Usuário criado:\", user);",
+							"    });",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Novo Usu\\u00e1rio\",\n  \"username\": \"novouser\",\n  \"email\": \"novo@teste.com\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Atualizar Usuário",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.sendRequest({",
+							"    url: 'http://localhost:3000/users',",
+							"    method: 'POST',",
+							"    header: { 'Content-Type': 'application/json' },",
+							"    body: {",
+							"        mode: 'raw',",
+							"        raw: JSON.stringify({",
+							"            name: 'Usuário pré',",
+							"            username: 'tempuser',",
+							"            email: `temp${Date.now()}@mail.com`",
+							"        })",
+							"    }",
+							"}, function (err, res) {",
+							"    if (!err) {",
+							"        const user = res.json();",
+							"        pm.collectionVariables.set(\"userId\", user.id);",
+							"    } else {",
+							"        console.log(\"Erro ao criar usuário:\", err);",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+							"});",
+							"",
+							"const userId = pm.collectionVariables.get(\"userId\");",
+							"if (userId) {",
+							"    pm.sendRequest({",
+							"        url: `http://localhost:3000/users/${userId}`,",
+							"        method: 'DELETE'",
+							"    }, function (err, res) {",
+							"        pm.collectionVariables.unset(\"userId\");",
+							"    });",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Usuário Atualizado\",\n  \"username\": \"usuarioupdate\",\n  \"email\": \"atualizado@mail.com\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/users/{{userId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users",
+						"{{userId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Deletar Usuário",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.sendRequest({",
+							"    url: 'http://localhost:3000/users',",
+							"    method: 'POST',",
+							"    header: { 'Content-Type': 'application/json' },",
+							"    body: {",
+							"        mode: 'raw',",
+							"        raw: JSON.stringify({",
+							"            name: 'Usuário pré',",
+							"            username: 'tempuser',",
+							"            email: `temp${Date.now()}@mail.com`",
+							"        })",
+							"    }",
+							"}, function (err, res) {",
+							"    if (!err) {",
+							"        const user = res.json();",
+							"        pm.collectionVariables.set(\"userId\", user.id);",
+							"        console.log(\"Usuário criado:\", user);",
+							"    } else {",
+							"        console.log(\"Erro ao criar usuário:\", err);",
+							"    }",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful DELETE request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200,201,204]);",
+							"});",
+							"",
+							"const userId = pm.collectionVariables.get(\"userId\");",
+							"",
+							"if (userId) {",
+							"    pm.sendRequest({",
+							"        url: `http://localhost:3000/users/${userId}`,",
+							"        method: 'DELETE'",
+							"    }, function (err, res) {",
+							"        pm.collectionVariables.unset(\"userId\");",
+							"    });",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/users/{{userId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users",
+						"{{userId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Criar Post",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Pre-request assume userId existente para criar post",
+							"if (!pm.collectionVariables.get(\"userId\")) {",
+							"    pm.sendRequest({",
+							"        url: 'http://localhost:3000/users',",
+							"        method: 'POST',",
+							"        header: { 'Content-Type': 'application/json' },",
+							"        body: {",
+							"            mode: 'raw',",
+							"            raw: JSON.stringify({",
+							"                name: 'Post User',",
+							"                username: 'postuser',",
+							"                email: `post${Date.now()}@mail.com`",
+							"            })",
+							"        }",
+							"    }, function (err, res) {",
+							"        const user = res.json();",
+							"        pm.collectionVariables.set(\"userId\", user.id);",
+							"    });",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+							"});",
+							"",
+							"let post = pm.response.json();",
+							"pm.collectionVariables.set(\"postId\", post.id);",
+							"",
+							"const postId = pm.response.json().id || 1;",
+							"pm.sendRequest({",
+							"    url: `http://localhost:3000/posts/${postId}`,",
+							"    method: 'DELETE'",
+							"}, function (err, res) {",
+							"    console.log('Post deletado',post);",
+							"});",
+							"const userId = pm.collectionVariables.get(\"userId\");",
+							"if (userId) {",
+							"    pm.sendRequest({",
+							"        url: `http://localhost:3000/users/${userId}`,",
+							"        method: 'DELETE'",
+							"    }, function (err, res) {",
+							"        pm.collectionVariables.unset(\"userId\");",
+							"         console.log('User Temporario deletado');",
+							"    });",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"userId\": {{userId}},\n  \"title\": \"Título do Post\",\n  \"body\": \"Conteúdo do post de teste.\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/posts",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Atualizar Post",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"if (!pm.collectionVariables.get(\"userId\")) {",
+							"    pm.sendRequest({",
+							"        url: 'http://localhost:3000/users',",
+							"        method: 'POST',",
+							"        header: { 'Content-Type': 'application/json' },",
+							"        body: {",
+							"            mode: 'raw',",
+							"            raw: JSON.stringify({",
+							"                name: 'User para PUT',",
+							"                username: 'putuser',",
+							"                email: `put${Date.now()}@mail.com`",
+							"            })",
+							"        }",
+							"    }, function (err, res) {",
+							"        if (!err && res.code === 201) {",
+							"            const user = res.json();",
+							"            pm.collectionVariables.set(\"userId\", user.id);",
+							"            console.log(\"Usuário criado:\", user.id);",
+							"",
+							"            // Cria o post",
+							"            pm.sendRequest({",
+							"                url: 'http://localhost:3000/posts',",
+							"                method: 'POST',",
+							"                header: { 'Content-Type': 'application/json' },",
+							"                body: {",
+							"                    mode: 'raw',",
+							"                    raw: JSON.stringify({",
+							"                        title: 'Post original',",
+							"                        body: 'Conteúdo original',",
+							"                        userId: user.id",
+							"                    })",
+							"                }",
+							"            }, function (err2, res2) {",
+							"                if (!err2 && res2.code === 201) {",
+							"                    const post = res2.json();",
+							"                    pm.collectionVariables.set(\"postId\", post.id);",
+							"                    console.log(\"Post criado:\", post.id);",
+							"                } else {",
+							"                    console.log(\"Erro ao criar post:\", err2 || res2);",
+							"                }",
+							"            });",
+							"        } else {",
+							"            console.log(\"Erro ao criar usuário:\", err || res);",
+							"        }",
+							"    });",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+							"});",
+							"",
+							"pm.test(\"Post atualizado com sucesso\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData.title).to.eql(\"Post atualizado\");",
+							"    pm.expect(jsonData.body).to.eql(\"Conteúdo atualizado via PUT\");",
+							"});",
+							"",
+							"// Após atualizar, deletar o post e o usuário",
+							"const postId = pm.collectionVariables.get(\"postId\");",
+							"const userId = pm.collectionVariables.get(\"userId\");",
+							"",
+							"if (postId) {",
+							"    pm.sendRequest({",
+							"        url: `http://localhost:3000/posts/${postId}`,",
+							"        method: 'DELETE'",
+							"    }, function (err, res) {",
+							"        if (!err && [200, 204].includes(res.code)) {",
+							"            console.log(\"Post deletado:\", postId);",
+							"",
+							"            // Agora deleta o usuário",
+							"            if (userId) {",
+							"                pm.sendRequest({",
+							"                    url: `http://localhost:3000/users/${userId}`,",
+							"                    method: 'DELETE'",
+							"                }, function (err2, res2) {",
+							"                    if (!err2 && [200, 204].includes(res2.code)) {",
+							"                        console.log(\"Usuário deletado:\", userId);",
+							"                        pm.collectionVariables.unset(\"postId\");",
+							"                        pm.collectionVariables.unset(\"userId\");",
+							"                    } else {",
+							"                        console.log(\"Erro ao deletar usuário:\", err2 || res2);",
+							"                    }",
+							"                });",
+							"            }",
+							"        } else {",
+							"            console.log(\"Erro ao deletar post:\", err || res);",
+							"        }",
+							"    });",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"title\": \"Post atualizado\",\n  \"body\": \"Conteúdo atualizado via PUT\",\n  \"userId\": {{userId}}\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/posts/{{postId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"posts",
+						"{{postId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Deletar Post",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"if (!pm.collectionVariables.get(\"postId\")) {",
+							"    pm.sendRequest({",
+							"        url: 'http://localhost:3000/users',",
+							"        method: 'POST',",
+							"        header: { 'Content-Type': 'application/json' },",
+							"        body: {",
+							"            mode: 'raw',",
+							"            raw: JSON.stringify({",
+							"                name: 'Post User',",
+							"                username: 'postuser',",
+							"                email: `post${Date.now()}@mail.com`",
+							"            })",
+							"        }",
+							"    }, function (err, res) {",
+							"        if (!err && res.code === 201) {",
+							"            const user = res.json();",
+							"            pm.collectionVariables.set(\"userId\", user.id);",
+							"            console.log(\"Usuário criado:\", user.id);",
+							"",
+							"            // Etapa 2: Criar o post",
+							"            pm.sendRequest({",
+							"                url: 'http://localhost:3000/posts',",
+							"                method: 'POST',",
+							"                header: { 'Content-Type': 'application/json' },",
+							"                body: {",
+							"                    mode: 'raw',",
+							"                    raw: JSON.stringify({",
+							"                        title: 'Post de teste',",
+							"                        body: 'Conteúdo do post',",
+							"                        userId: user.id",
+							"                    })",
+							"                }",
+							"            }, function (err2, res2) {",
+							"                if (!err2 && res2.code === 201) {",
+							"                    const post = res2.json();",
+							"                    pm.collectionVariables.set(\"postId\", post.id);",
+							"                    console.log(\"Post criado:\", post.id);",
+							"                } else {",
+							"                    console.log(\"Erro ao criar post:\", err2 || res2);",
+							"                }",
+							"            });",
+							"        } else {",
+							"            console.log(\"Erro ao criar usuário:\", err || res);",
+							"        }",
+							"    });",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Post deletado com sucesso\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 204]);",
+							"});",
+							"",
+							"const userId = pm.collectionVariables.get(\"userId\");",
+							"",
+							"if (userId) {",
+							"    pm.sendRequest({",
+							"        url: `http://localhost:3000/users/${userId}`,",
+							"        method: 'DELETE'",
+							"    }, function (err, res) {",
+							"        if (!err && [200, 204].includes(res.code)) {",
+							"            console.log(\"Usuário deletado com sucesso:\", userId);",
+							"            pm.collectionVariables.unset(\"userId\");",
+							"            pm.collectionVariables.unset(\"postId\");",
+							"        } else {",
+							"            console.log(\"Erro ao deletar usuário:\", err || res);",
+							"        }",
+							"    });",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/posts/{{postId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"posts",
+						"{{postId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
